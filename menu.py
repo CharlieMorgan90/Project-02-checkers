@@ -2,6 +2,7 @@
 # Currently NOT BEING USED as having issues with building application with multiple files
 
 import pygame
+import redditwarp.SYNC
 Width, Height = 1000, 700 # match size from main.py
 screen = pygame.display.set_mode([Width, Height])
 
@@ -66,7 +67,7 @@ def menu_buttons():
     screen.blit(button_text, button_text_rect)
 
     # Tutorial button
-    tutorial_icon = pygame.image.load('pics/tutorial_icon.png')
+    tutorial_icon = pygame.image.load('pics/reddit.png')
 
     color = (128, 128, 128) # grey
     cursor_color = (100, 100, 100) # darker grey
@@ -74,7 +75,7 @@ def menu_buttons():
     size = (300, 50)  # width, height
 
     button_font = pygame.font.Font(None, 32)
-    button_text = button_font.render("Tutorial", True, (255, 255, 255)) # Button text and color
+    button_text = button_font.render("Reddit", True, (255, 255, 255)) # Button text and color
     button_text_rect = button_text.get_rect(center=(Width // 2, Height // 3+160))
     pygame.draw.rect(screen, color, pygame.Rect(position, size))
     screen.blit(button_text, button_text_rect)
@@ -97,7 +98,39 @@ def menu_buttons():
     screen.blit(tutorial_icon_resized, tutorial_icon_rect.topleft)  # Draw the icon after drawing the button
     screen.blit(button_text, button_text_rect)
 
-    return button_rect, button_rect_2, button_rect_3
+    # reddit button
+    reddit_icon = pygame.image.load('pics/tutorial_icon.png')
+
+    color = (128, 128, 128) # grey
+    cursor_color = (100, 100, 100) # darker grey
+    position = (Width // 2-150, Height // 3 + 135)
+    size = (300, 50)  # width, height
+
+    button_font = pygame.font.Font(None, 32)
+    button_text = button_font.render("Tutorial", True, (255, 255, 255)) # Button text and color
+    button_text_rect = button_text.get_rect(center=(Width // 2, Height // 3+160))
+    pygame.draw.rect(screen, color, pygame.Rect(position, size))
+    screen.blit(button_text, button_text_rect)
+
+    # Draw the icon next to the text with the specified size
+    reddit_icon_resized = pygame.transform.scale(reddit_icon, icon_size)
+    reddit_icon_rect = reddit_icon_resized.get_rect(topleft=(Width // 2 - 150 + 10, Height // 3 + 135 + (button_height - icon_size[1]) // 2))
+
+    pygame.draw.rect(screen, color, pygame.Rect(position, size))
+    screen.blit(button_text, button_text_rect)
+    
+    # Used to indicate if cursor is hovering over button. If so, button will be darker
+    mouse = pygame.mouse.get_pos()
+    button_rect_4 = pygame.Rect(position, size)
+    if button_rect_4.collidepoint(mouse):
+        pygame.draw.rect(screen, cursor_color, button_rect_4)  # Change color when cursor hovered over
+    else:
+        pygame.draw.rect(screen, color, button_rect_4) # stay original color if cursor not hovering over
+
+    screen.blit(reddit_icon_resized, reddit_icon_rect.topleft)  # Draw the icon after drawing the button
+    screen.blit(button_text, button_text_rect)
+
+    return button_rect, button_rect_2, button_rect_3, button_rect_4
 
 def tutorial(): # tutorial prompt (subject to change text)
     # load image used in tutorial
@@ -186,4 +219,8 @@ def tutorial(): # tutorial prompt (subject to change text)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if exit_button_rect.collidepoint(event.pos):  # if exit tutorial button is clicked
                     return  # exit tutorial and return to menu
-                
+def redditFunction():
+    client = redditwarp.SYNC.Client()
+    m = next(client.p.subreddit.pull.top('Temple', amount=1, time='hour'))
+    print(m.title)
+    print(m.permalink)

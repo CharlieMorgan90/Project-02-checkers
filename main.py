@@ -4,6 +4,8 @@ The main file holds menu operations for the game including sound, settings, lead
 
 """
 import pygame
+import redditwarp.SYNC
+
 from SecondMenu import SecondMenu
 from constants import BLUE, YELLOW, RED, GREEN
 from ScoreManager import ScoreManager
@@ -72,6 +74,7 @@ def main():
     running = True
     while running:
         # did the user click the window close button?
+    
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -80,7 +83,7 @@ def main():
                 if buttons[0].collidepoint(event.pos): # If Start Game button is clicked, show the second menu
                    second_menu_instance.start_game_menu()
                 if buttons[2].collidepoint(event.pos): # if mouse is clicked on tutorial button
-                    tutorial()
+                    redditFunction()
                 elif buttons[1].collidepoint(event.pos): # if mouse is clicked on settings button
                     settings()
                 elif buttons[4].collidepoint(event.pos): # if mouse is clicked on leaderboard button (not yet implemented)
@@ -102,7 +105,12 @@ def main():
 
     # done! time to quit
     pygame.quit()
-
+def redditFunction():
+    client = redditwarp.SYNC.Client()
+    m = next(client.p.subreddit.pull.top('Temple', amount=1, time='hour'))
+    print(m.title)
+    print(m.permalink)
+    
 def menu_buttons():
     """
     The menu buttons function creates the buttons on the main menu. It returns the button rectangles for each button so that they can be used in the main function.
@@ -173,7 +181,7 @@ def menu_buttons():
     screen.blit(button_text, button_text_rect)
 
     # Tutorial button
-    tutorial_icon = pygame.image.load('pics/tutorial_icon.png')
+    tutorial_icon = pygame.image.load('pics/reddit.png')
 
     color = (128, 128, 128) # grey
     cursor_color = (100, 100, 100) # darker grey
@@ -181,7 +189,7 @@ def menu_buttons():
     size = (300, 50)  # width, height
 
     button_font = pygame.font.Font(None, 32)
-    button_text = button_font.render("Tutorial", True, (255, 255, 255)) # Button text and color
+    button_text = button_font.render("Reddit", True, (255, 255, 255)) # Button text and color
     button_text_rect = button_text.get_rect(center=(Width // 2, Height // 3+160))
     pygame.draw.rect(screen, color, pygame.Rect(position, size))
     screen.blit(button_text, button_text_rect)

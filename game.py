@@ -3,6 +3,7 @@ Game.py
 The game file holds the game logic and game class.
 """
 import pygame
+import redditwarp.SYNC
 from constants import RED, WHITE, YELLOW, SQUARE_SIZE
 from Main_Board import Main_Board
 
@@ -77,6 +78,7 @@ class Game:
         """
         text = f"Player 1: {player1}"
         text2 = f"Player 2: {player2}"
+        
         text_surface = self.font.render(text, True, self.text_color)
         text_surface2 = self.font.render(text2, True, self.text_color)
         self.screen.blit(text_surface, (715, 350))
