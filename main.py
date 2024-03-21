@@ -85,6 +85,8 @@ def main():
                     settings()
                 elif buttons[4].collidepoint(event.pos): # if mouse is clicked on leaderboard button (not yet implemented)
                     board_customization()
+                elif buttons[5].collidepoint(event.pos): # if mouse is clicked on reddit button (not yet implemented)
+                    redditFunction()
                 # Check if the current song has finished, loop to next song
             elif event.type == SONG_END:
                 music_loop()
@@ -270,8 +272,40 @@ def menu_buttons():
 
     screen.blit(board_icon_resized, board_icon_rect.topleft)  # Draw the icon after drawing the button
     screen.blit(button_text, button_text_rect)
+    # reddit button
+    reddit_icon = pygame.image.load('pics/reddit.png')
 
-    return button_rect, button_rect_2, button_rect_3, button_rect_4, button_rect_5
+    color = (128, 128, 128) # grey
+    cursor_color = (100, 100, 100) # darker grey
+    position = (Width // 2-150, Height // 3 + 135)
+    size = (300, 50)  # width, height
+
+    button_font = pygame.font.Font(None, 32)
+    button_text = button_font.render("Reddit", True, (255, 255, 255)) # Button text and color
+    button_text_rect = button_text.get_rect(center=(Width // 2, Height // 3+350))
+    pygame.draw.rect(screen, color, pygame.Rect(position, size))
+    screen.blit(button_text, button_text_rect)
+
+    # Draw the icon next to the text with the specified size
+    reddit_icon_resized = pygame.transform.scale(reddit_icon, icon_size)
+    reddit_icon_rect = reddit_icon_resized.get_rect(topleft=(Width // 2 - 150 + 10, Height // 3 + 135 + (button_height - icon_size[1]) // 2))
+
+    pygame.draw.rect(screen, color, pygame.Rect(position, size))
+    screen.blit(button_text, button_text_rect)
+    
+    # Used to indicate if cursor is hovering over button. If so, button will be darker
+    mouse = pygame.mouse.get_pos()
+    button_rect_6 = pygame.Rect(position, size)
+    if button_rect_6.collidepoint(mouse):
+        pygame.draw.rect(screen, cursor_color, button_rect_6)  # Change color when cursor hovered over
+    else:
+        pygame.draw.rect(screen, color, button_rect_6) # stay original color if cursor not hovering over
+
+    screen.blit(reddit_icon_resized, reddit_icon_rect.topleft)  # Draw the icon after drawing the button
+    screen.blit(button_text, button_text_rect)
+
+
+    return button_rect, button_rect_2, button_rect_3, button_rect_4, button_rect_5, button_rect_6
 
 def tutorial(): 
     """
