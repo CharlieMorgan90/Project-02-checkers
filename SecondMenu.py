@@ -25,7 +25,13 @@ player2_name = Player("Player 2", 0)
 score_manager = ScoreManager("user_data/user_data.json")
 cursor_color = (100, 100, 100) # darker grey
 color = (128, 128, 128) # grey
-
+def exit_game_esc(event, run):
+    if event.type == pygame.QUIT:
+        return False
+    elif event.type == pygame.KEYDOWN:  # Check if any key is pressed
+        if event.key == pygame.K_SPACE:  # Specifically check if the key is the Space bar
+            return False
+    return run
 def get_row_col_from_mouse(pos):
     """
     This function gets the row and column of the mouse position. This is necessary for selecting pieces in the class.
@@ -221,8 +227,7 @@ class SecondMenu:
                     score_manager.update_scores(player1_name)
 
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
+                run = exit_game_esc(event, run)
             
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -268,8 +273,7 @@ class SecondMenu:
                     score_manager.update_scores(player1_name)
 
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
+                run = exit_game_esc(event, run)
             
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -278,5 +282,7 @@ class SecondMenu:
                     
                 if event.type == background_music.SONG_END:
                         background_music.handle_event(event)
-
+                        
             game.update()
+                        
+        

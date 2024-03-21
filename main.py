@@ -5,6 +5,8 @@ The main file holds menu operations for the game including sound, settings, lead
 """
 import pygame
 import redditwarp.SYNC
+import webbrowser
+import tkinter as tk
 
 from SecondMenu import SecondMenu
 from constants import BLUE, YELLOW, RED, GREEN
@@ -108,8 +110,46 @@ def main():
 def redditFunction():
     client = redditwarp.SYNC.Client()
     m = next(client.p.subreddit.pull.top('Temple', amount=1, time='hour'))
-    print(m.title)
-    print(m.permalink)
+    reddit_title = m.title
+    reddit_permalink = "reddit.com" + m.permalink
+
+    # Box settings
+    box_color = (30, 30, 30)  # Dark gray box
+    box_position = (Width // 2 - 250, Height // 2 - 100)  
+    box_size = (550, 50) 
+
+    # Font settings
+    reddit_font = pygame.font.Font(None, 24)  
+
+    # Render text
+    reddit_title_text = reddit_font.render(f"Title: {reddit_title}", True, (255, 255, 255), box_color)
+
+    # Calculate text positioning inside the box
+    title_text_x = box_position[0] + 10 
+    title_text_y = box_position[1] + 10
+    permalink_text_x = title_text_x
+    permalink_text_y = title_text_y + reddit_title_text.get_height() + 5
+
+    # Drawing box
+    pygame.draw.rect(screen, box_color, (box_position[0], box_position[1], box_size[0], box_size[1]))
+
+    # Drawing text on the screen
+    screen.blit(reddit_title_text, (title_text_x, title_text_y))
+
+    pygame.display.flip()
+    
+    webbrowser.open(m.permalink)
+
+    # Keep displaying until the user closes the window or presses a key to go back
+    waiting_for_input = True
+    while waiting_for_input:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                waiting_for_input = False
+            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                waiting_for_input = False
+
     
 def menu_buttons():
     """
